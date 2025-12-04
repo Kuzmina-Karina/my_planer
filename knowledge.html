@@ -1,0 +1,1842 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Система Знаний</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --gray: #95a5a6;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: var(--dark);
+        }
+
+        .app {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .header h1 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .header .subtitle {
+            color: var(--gray);
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .nav-tab {
+            padding: 10px 25px;
+            border: 2px solid var(--secondary);
+            border-radius: 25px;
+            background: white;
+            color: var(--secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .nav-tab:hover {
+            background: var(--secondary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .nav-tab.active {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+            min-height: 70vh;
+        }
+
+        .sidebar {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .content {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .add-btn {
+            background: var(--success);
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: all 0.3s ease;
+        }
+
+        .add-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .subject-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .subject-card {
+            background: var(--light);
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--secondary);
+        }
+
+        .subject-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .subject-card.active {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .subject-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .subject-meta {
+            font-size: 0.8em;
+            color: var(--gray);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .topic-list {
+            margin-top: 20px;
+        }
+
+        .topic-item {
+            padding: 10px 15px;
+            margin: 5px 0;
+            background: var(--light);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .topic-item:hover {
+            background: #d5dbdb;
+            transform: translateX(3px);
+        }
+
+        .topic-item.active {
+            background: var(--success);
+            color: white;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--gray);
+        }
+
+        .empty-state i {
+            font-size: 4em;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--light);
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--secondary);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+
+        .btn-primary {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #219a52;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--gray);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #7f8c8d;
+            transform: translateY(-2px);
+        }
+
+        /* Стили для редактора */
+        .editor-container {
+            min-height: 500px;
+            border: 2px solid var(--light);
+            border-radius: 10px;
+            padding: 20px;
+            background: white;
+            position: relative;
+        }
+
+        .editor-toolbar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--light);
+            flex-wrap: wrap;
+        }
+
+        .toolbar-btn {
+            padding: 8px 12px;
+            border: 1px solid var(--light);
+            background: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9em;
+        }
+
+        .toolbar-btn:hover {
+            background: var(--light);
+            border-color: var(--secondary);
+        }
+
+        .editor-content {
+            min-height: 400px;
+            padding: 15px;
+            line-height: 1.6;
+            outline: none;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            position: relative;
+        }
+
+        .editor-content:focus {
+            border-color: var(--secondary);
+        }
+
+        /* Стили для форматирования текста */
+        .editor-content h1 {
+            font-size: 2em;
+            color: var(--primary);
+            margin: 20px 0 10px 0;
+            border-bottom: 2px solid var(--light);
+            padding-bottom: 5px;
+        }
+
+        .editor-content h2 {
+            font-size: 1.5em;
+            color: var(--primary);
+            margin: 15px 0 8px 0;
+        }
+
+        .editor-content h3 {
+            font-size: 1.25em;
+            color: var(--primary);
+            margin: 12px 0 6px 0;
+        }
+
+        .editor-content ul, .editor-content ol {
+            margin: 10px 0 10px 20px;
+        }
+
+        .editor-content li {
+            margin: 5px 0;
+        }
+
+        .editor-content blockquote {
+            border-left: 4px solid var(--secondary);
+            padding-left: 15px;
+            margin: 10px 0;
+            font-style: italic;
+            color: var(--gray);
+        }
+
+        /* Стили для блока кода */
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            border: 1px solid #444;
+            border-left: 4px solid var(--secondary);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            overflow-x: auto;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .code-block::before {
+            content: 'Код';
+            position: absolute;
+            top: 0;
+            right: 30px;
+            background: var(--secondary);
+            color: white;
+            padding: 2px 8px;
+            font-size: 10px;
+            border-radius: 0 0 4px 4px;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .code-delete-btn {
+            position: absolute;
+            top: 0;
+            right: 5px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .code-delete-btn:hover {
+            background: #c0392b;
+            transform: scale(1.1);
+        }
+
+        /* Стили для таблиц */
+        .custom-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .custom-table th {
+            background: var(--secondary);
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            position: relative;
+            min-width: 100px;
+        }
+
+        .custom-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--light);
+            position: relative;
+            min-width: 100px;
+        }
+
+        .custom-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        /* Стили для кнопок управления таблицей */
+        .table-controls {
+            position: absolute;
+            top: -30px;
+            right: 0;
+            display: flex;
+            gap: 5px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .custom-table:hover .table-controls {
+            opacity: 1;
+        }
+
+        .table-control-btn {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .table-control-btn:hover {
+            background: #2980b9;
+            transform: scale(1.1);
+        }
+
+        .table-control-btn.delete {
+            background: var(--accent);
+        }
+
+        .table-control-btn.delete:hover {
+            background: #c0392b;
+        }
+
+        /* Стили для кнопок управления строками и столбцами */
+        .row-controls {
+            position: absolute;
+            left: -35px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        tr:hover .row-controls {
+            opacity: 1;
+        }
+
+        .row-control-btn {
+            background: var(--gray);
+            color: white;
+            border: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 2px;
+            cursor: pointer;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .row-control-btn:hover {
+            background: #7f8c8d;
+        }
+
+        .col-controls {
+            position: absolute;
+            top: -25px;
+            display: flex;
+            gap: 2px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        th:hover .col-controls,
+        td:hover .col-controls {
+            opacity: 1;
+        }
+
+        .col-control-btn {
+            background: var(--gray);
+            color: white;
+            border: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 2px;
+            cursor: pointer;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .col-control-btn:hover {
+            background: #7f8c8d;
+        }
+
+        /* Крестик для удаления таблицы */
+        .table-delete-btn {
+            position: absolute;
+            top: -12px;
+            right: -12px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 10;
+            opacity: 0;
+        }
+
+        .custom-table:hover .table-delete-btn {
+            opacity: 1;
+        }
+
+        .table-delete-btn:hover {
+            background: #c0392b;
+            transform: scale(1.1);
+        }
+
+        /* Стили для поля блоков */
+        .blocks-field {
+            background: #f8f9fa;
+            border: 2px dashed var(--secondary);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            min-height: 200px;
+            position: relative;
+            cursor: default;
+            resize: both;
+            overflow: auto;
+            min-width: 300px;
+            min-height: 200px;
+        }
+
+        .blocks-field::before {
+            content: 'Поле для блоков - добавляйте и перемещайте блоки здесь';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--gray);
+            font-size: 1.1em;
+            pointer-events: none;
+            text-align: center;
+            z-index: 1;
+        }
+
+        .blocks-field.has-blocks::before {
+            display: none;
+        }
+
+        .field-header {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            display: flex;
+            gap: 5px;
+            z-index: 20;
+        }
+
+        .field-delete-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .field-delete-btn:hover {
+            background: #c0392b;
+            transform: scale(1.1);
+        }
+
+        .field-controls {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            display: flex;
+            gap: 5px;
+            z-index: 20;
+        }
+
+        .field-resize-handle {
+            width: 12px;
+            height: 12px;
+            background: var(--secondary);
+            border-radius: 2px;
+            cursor: nwse-resize;
+            opacity: 0.7;
+            transition: all 0.3s ease;
+        }
+
+        .field-resize-handle:hover {
+            opacity: 1;
+            transform: scale(1.2);
+        }
+
+        /* Стили для подвижных блоков */
+        .draggable-block {
+            position: absolute;
+            min-width: 150px;
+            min-height: 80px;
+            background: white;
+            border: 2px solid var(--secondary);
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            cursor: move;
+            resize: both;
+            overflow: auto;
+            z-index: 10;
+        }
+
+        .draggable-block:hover {
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+
+        .draggable-block-header {
+            background: var(--secondary);
+            color: white;
+            padding: 8px 12px;
+            margin: -15px -15px 15px -15px;
+            border-radius: 8px 8px 0 0;
+            cursor: move;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .block-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .block-action-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+
+        .block-action-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .draggable-block-content {
+            min-height: 50px;
+            outline: none;
+        }
+
+        .back-btn {
+            background: var(--gray);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+        }
+
+        .back-btn:hover {
+            background: #7f8c8d;
+        }
+
+        .save-btn {
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-top: 15px;
+        }
+
+        .save-btn:hover {
+            background: #219a52;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-tabs {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .editor-toolbar {
+                justify-content: center;
+            }
+            
+            .draggable-block {
+                min-width: 120px;
+                min-height: 60px;
+            }
+            
+            .blocks-field {
+                min-width: 250px;
+                min-height: 150px;
+            }
+            
+            .table-controls {
+                opacity: 1;
+            }
+            
+            .row-controls, .col-controls {
+                opacity: 1;
+            }
+            
+            .table-delete-btn {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <div class="header">
+            <h1>Система Знаний</h1>
+            <div class="subtitle">Создавайте структурированные заметки по принципу "Предмет → Тема → Материал"</div>
+            <div class="nav-tabs">
+                <a href="index.html" class="nav-tab">Трекер Недели</a>
+                <a href="#" class="nav-tab active">Система Знаний</a>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="sidebar">
+                <div class="section-title">
+                    Предметы
+                    <button class="add-btn" onclick="openSubjectModal()">+</button>
+                </div>
+
+                <div class="subject-list" id="subjectList">
+                    <!-- Subjects will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <div class="content">
+                <div id="welcomeMessage" class="empty-state">
+                    <div>📚</div>
+                    <h3>Добро пожаловать в Систему Знаний!</h3>
+                    <p>Создайте свой первый предмет, чтобы начать организовывать знания.</p>
+                    <p style="margin-top: 15px; font-size: 0.9em; color: var(--gray);">
+                        Структура: Предмет → Тема → Материал
+                    </p>
+                </div>
+
+                <div id="subjectView" style="display: none;">
+                    <button class="back-btn" onclick="knowledgeSystem.backToSubjects()">← Назад к предметам</button>
+                    <div class="section-title">
+                        <span id="currentSubjectName">Предмет</span>
+                        <button class="add-btn" onclick="openTopicModal()">+</button>
+                    </div>
+                    
+                    <div class="topic-list" id="topicList">
+                        <!-- Topics will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <div id="topicView" style="display: none;">
+                    <button class="back-btn" onclick="knowledgeSystem.backToTopics()">← Назад к темам</button>
+                    <div class="section-title">
+                        <span id="currentTopicName">Тема</span>
+                    </div>
+                    
+                    <div class="editor-container">
+                        <div class="editor-toolbar">
+                            <button class="toolbar-btn" onclick="formatText('bold')"><b>Ж</b></button>
+                            <button class="toolbar-btn" onclick="formatText('italic')"><i>К</i></button>
+                            <button class="toolbar-btn" onclick="formatText('underline')"><u>Ч</u></button>
+                            <button class="toolbar-btn" onclick="formatText('insertUnorderedList')">• Список</button>
+                            <button class="toolbar-btn" onclick="formatText('insertOrderedList')">1. Нумер. список</button>
+                            <button class="toolbar-btn" onclick="formatText('formatBlock', '<h1>')">H1</button>
+                            <button class="toolbar-btn" onclick="formatText('formatBlock', '<h2>')">H2</button>
+                            <button class="toolbar-btn" onclick="formatText('formatBlock', '<h3>')">H3</button>
+                            <button class="toolbar-btn" onclick="formatText('formatBlock', '<p>')">¶</button>
+                            <button class="toolbar-btn" onclick="formatText('formatBlock', '<blockquote>')">❝</button>
+                            <button class="toolbar-btn" onclick="insertCode()">{ } Код</button>
+                            <button class="toolbar-btn" onclick="insertTable()">▦ Таблица</button>
+                            <button class="toolbar-btn" onclick="insertBlocksField()">⬚ Поле блоков</button>
+                        </div>
+                        
+                        <div class="editor-content" id="editorContent" contenteditable="true">
+                            Начните вводить текст...
+                        </div>
+                        
+                        <button class="save-btn" onclick="knowledgeSystem.saveTopicContent(true)">💾 Сохранить</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Subject Modal -->
+    <div id="subjectModal" class="modal">
+        <div class="modal-content">
+            <h3>Новый предмет</h3>
+            <form id="subjectForm">
+                <div class="form-group">
+                    <label for="subjectName">Название предмета:</label>
+                    <input type="text" id="subjectName" class="form-control" placeholder="Например: Математика" required>
+                </div>
+                <div class="form-group">
+                    <label for="subjectDescription">Описание (необязательно):</label>
+                    <textarea id="subjectDescription" class="form-control" placeholder="Краткое описание предмета" rows="3"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeSubjectModal()">Отмена</button>
+                    <button type="submit" class="btn btn-primary">Создать предмет</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Topic Modal -->
+    <div id="topicModal" class="modal">
+        <div class="modal-content">
+            <h3>Новая тема</h3>
+            <form id="topicForm">
+                <div class="form-group">
+                    <label for="topicName">Название темы:</label>
+                    <input type="text" id="topicName" class="form-control" placeholder="Например: Производные" required>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeTopicModal()">Отмена</button>
+                    <button type="submit" class="btn btn-primary">Создать тему</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        class KnowledgeSystem {
+            constructor() {
+                this.subjects = this.loadData('subjects', []);
+                this.topics = this.loadData('topics', []);
+                this.notes = this.loadData('notes', {});
+                this.currentSubject = null;
+                this.currentTopic = null;
+                this.saveTimeout = null;
+                this.init();
+            }
+
+            init() {
+                this.renderSubjects();
+                this.bindEvents();
+                this.setupAutoSave();
+                console.log('Система инициализирована. Предметов:', this.subjects.length);
+            }
+
+            loadData(key, defaultValue) {
+                const saved = localStorage.getItem('knowledge_' + key);
+                if (saved) {
+                    try {
+                        return JSON.parse(saved);
+                    } catch (e) {
+                        console.error('Ошибка загрузки данных:', e);
+                    }
+                }
+                return defaultValue;
+            }
+
+            saveData(key, data) {
+                try {
+                    localStorage.setItem('knowledge_' + key, JSON.stringify(data));
+                    console.log('Сохранено:', key, data);
+                } catch (e) {
+                    console.error('Ошибка сохранения:', e);
+                }
+            }
+
+            renderSubjects() {
+                const container = document.getElementById('subjectList');
+                
+                if (this.subjects.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <div>📚</div>
+                            <div>Пока нет предметов</div>
+                            <div style="margin-top: 10px; font-size: 0.9em;">Нажмите + чтобы добавить первый предмет</div>
+                        </div>
+                    `;
+                } else {
+                    container.innerHTML = this.subjects.map(subject => {
+                        const topicCount = this.topics.filter(t => t.subjectId === subject.id).length;
+                        return `
+                            <div class="subject-card" onclick="knowledgeSystem.selectSubject('${subject.id}')">
+                                <div class="subject-name">${subject.name}</div>
+                                <div class="subject-meta">
+                                    <span>${topicCount} тем</span>
+                                    <span>${new Date(subject.createdAt).toLocaleDateString()}</span>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+            }
+
+            renderTopics() {
+                const container = document.getElementById('topicList');
+                if (!this.currentSubject) return;
+
+                const subjectTopics = this.topics.filter(t => t.subjectId === this.currentSubject.id);
+                
+                if (subjectTopics.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <div>📂</div>
+                            <div>Пока нет тем</div>
+                            <div style="margin-top: 10px; font-size: 0.9em;">Нажмите + чтобы добавить первую тему</div>
+                        </div>
+                    `;
+                } else {
+                    container.innerHTML = subjectTopics.map(topic => `
+                        <div class="topic-item" onclick="knowledgeSystem.selectTopic('${topic.id}')">
+                            ${topic.name}
+                        </div>
+                    `).join('');
+                }
+            }
+
+            selectSubject(subjectId) {
+                this.currentSubject = this.subjects.find(s => s.id === subjectId);
+                if (this.currentSubject) {
+                    document.getElementById('welcomeMessage').style.display = 'none';
+                    document.getElementById('topicView').style.display = 'none';
+                    document.getElementById('subjectView').style.display = 'block';
+                    document.getElementById('currentSubjectName').textContent = this.currentSubject.name;
+                    this.renderTopics();
+                }
+            }
+
+            selectTopic(topicId) {
+                this.currentTopic = this.topics.find(t => t.id === topicId);
+                if (this.currentTopic) {
+                    document.getElementById('subjectView').style.display = 'none';
+                    document.getElementById('topicView').style.display = 'block';
+                    document.getElementById('currentTopicName').textContent = this.currentTopic.name;
+                    
+                    // Загружаем содержимое темы
+                    this.loadTopicContent();
+                }
+            }
+
+            backToSubjects() {
+                document.getElementById('subjectView').style.display = 'none';
+                document.getElementById('topicView').style.display = 'none';
+                document.getElementById('welcomeMessage').style.display = 'block';
+                this.currentSubject = null;
+                this.currentTopic = null;
+            }
+
+            backToTopics() {
+                document.getElementById('topicView').style.display = 'none';
+                document.getElementById('subjectView').style.display = 'block';
+                this.currentTopic = null;
+            }
+
+            loadTopicContent() {
+                const editor = document.getElementById('editorContent');
+                let content = this.notes[this.currentTopic.id] || '<p>Начните вводить текст...</p>';
+                
+                // Добавляем кнопки удаления для существующих блоков кода
+                content = content.replace(/<pre class="code-block">/g, 
+                    '<pre class="code-block"><button class="code-delete-btn" onclick="deleteCodeBlock(this.parentElement)">×</button>');
+                
+                editor.innerHTML = content;
+
+                // Инициализируем функционал для таблиц
+                this.initializeTableControls();
+                // Инициализируем функционал для полей блоков
+                this.initializeBlocksFields();
+            }
+
+            initializeTableControls() {
+                const tables = document.querySelectorAll('.custom-table');
+                tables.forEach(table => {
+                    this.addTableControls(table);
+                });
+            }
+
+            addTableControls(table) {
+                // Добавляем крестик для удаления таблицы
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'table-delete-btn';
+                deleteBtn.innerHTML = '×';
+                deleteBtn.onclick = () => this.deleteTable(table);
+                table.appendChild(deleteBtn);
+
+                // Добавляем кнопки управления таблицей
+                const tableControls = document.createElement('div');
+                tableControls.className = 'table-controls';
+                tableControls.innerHTML = `
+                    <button class="table-control-btn" onclick="addTableRow(this)">+↕</button>
+                    <button class="table-control-btn" onclick="addTableColumn(this)">+↔</button>
+                `;
+                table.appendChild(tableControls);
+
+                // Добавляем кнопки управления строками
+                const rows = table.querySelectorAll('tr');
+                rows.forEach((row, rowIndex) => {
+                    this.addRowControls(row, rowIndex);
+                });
+            }
+
+            addRowControls(row, rowIndex) {
+                const rowControls = document.createElement('div');
+                rowControls.className = 'row-controls';
+                rowControls.innerHTML = `
+                    <button class="row-control-btn" onclick="addTableRowAtIndex(this, ${rowIndex})">+</button>
+                    <button class="row-control-btn" onclick="deleteTableRow(this, ${rowIndex})">-</button>
+                `;
+                row.style.position = 'relative';
+                row.appendChild(rowControls);
+
+                // Добавляем кнопки управления столбцами для каждой ячейки
+                const cells = row.querySelectorAll('th, td');
+                cells.forEach((cell, colIndex) => {
+                    this.addColumnControls(cell, colIndex);
+                });
+            }
+
+            addColumnControls(cell, colIndex) {
+                const colControls = document.createElement('div');
+                colControls.className = 'col-controls';
+                colControls.innerHTML = `
+                    <button class="col-control-btn" onclick="addTableColumnAtIndex(this, ${colIndex})">+</button>
+                    <button class="col-control-btn" onclick="deleteTableColumn(this, ${colIndex})">-</button>
+                `;
+                cell.style.position = 'relative';
+                cell.appendChild(colControls);
+            }
+
+            deleteTable(table) {
+                if (table && confirm('Удалить всю таблицу?')) {
+                    table.remove();
+                    this.saveTopicContent(false);
+                }
+            }
+
+            initializeBlocksFields() {
+                const blocksFields = document.querySelectorAll('.blocks-field');
+                blocksFields.forEach(field => {
+                    // Восстанавливаем блоки из data-атрибутов
+                    const blocksData = field.getAttribute('data-blocks');
+                    if (blocksData) {
+                        try {
+                            const blocks = JSON.parse(blocksData);
+                            blocks.forEach(blockData => {
+                                this.createBlockInField(field, blockData);
+                            });
+                        } catch (e) {
+                            console.error('Ошибка загрузки блоков:', e);
+                        }
+                    }
+                    
+                    // Инициализируем изменение размера
+                    this.initializeFieldResize(field);
+                });
+            }
+
+            createBlockInField(field, blockData) {
+                const block = document.createElement('div');
+                block.className = 'draggable-block';
+                block.style.left = blockData.x + 'px';
+                block.style.top = blockData.y + 'px';
+                block.style.width = blockData.width + 'px';
+                block.style.height = blockData.height + 'px';
+                block.style.backgroundColor = blockData.color || '#ffffff';
+
+                block.innerHTML = `
+                    <div class="draggable-block-header">
+                        <div class="block-actions">
+                            <button class="block-action-btn" onclick="changeBlockColor(this.parentElement.parentElement.parentElement)">🎨</button>
+                            <button class="block-action-btn" onclick="deleteBlock(this.parentElement.parentElement.parentElement)">×</button>
+                        </div>
+                    </div>
+                    <div class="draggable-block-content" contenteditable="true">${blockData.content || 'Введите текст...'}</div>
+                `;
+
+                this.makeElementDraggable(block, field);
+                field.appendChild(block);
+                field.classList.add('has-blocks');
+            }
+
+            makeElementDraggable(element, container) {
+                let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+                const header = element.querySelector('.draggable-block-header');
+                
+                header.onmousedown = dragMouseDown;
+
+                function dragMouseDown(e) {
+                    e = e || window.event;
+                    e.preventDefault();
+                    pos3 = e.clientX;
+                    pos4 = e.clientY;
+                    document.onmouseup = closeDragElement;
+                    document.onmousemove = elementDrag;
+                    element.style.zIndex = '1000';
+                }
+
+                function elementDrag(e) {
+                    e = e || window.event;
+                    e.preventDefault();
+                    pos1 = pos3 - e.clientX;
+                    pos2 = pos4 - e.clientY;
+                    pos3 = e.clientX;
+                    pos4 = e.clientY;
+                    
+                    // Получаем текущее положение относительно контейнера
+                    const containerRect = container.getBoundingClientRect();
+                    const currentX = parseInt(element.style.left) || 0;
+                    const currentY = parseInt(element.style.top) || 0;
+                    
+                    // Вычисляем новые координаты
+                    const newX = currentX - pos1;
+                    const newY = currentY - pos2;
+                    
+                    // Ограничиваем перемещение в пределах контейнера
+                    const maxX = containerRect.width - element.offsetWidth;
+                    const maxY = containerRect.height - element.offsetHeight;
+                    
+                    element.style.left = Math.max(0, Math.min(newX, maxX)) + 'px';
+                    element.style.top = Math.max(0, Math.min(newY, maxY)) + 'px';
+                }
+
+                function closeDragElement() {
+                    document.onmouseup = null;
+                    document.onmousemove = null;
+                    element.style.zIndex = '';
+                    knowledgeSystem.saveTopicContent(false);
+                }
+            }
+
+            initializeFieldResize(field) {
+                const resizeHandle = field.querySelector('.field-resize-handle');
+                if (!resizeHandle) return;
+
+                let startX, startY, startWidth, startHeight;
+
+                resizeHandle.addEventListener('mousedown', initResize);
+
+                function initResize(e) {
+                    e.preventDefault();
+                    startX = e.clientX;
+                    startY = e.clientY;
+                    startWidth = parseInt(document.defaultView.getComputedStyle(field).width, 10);
+                    startHeight = parseInt(document.defaultView.getComputedStyle(field).height, 10);
+                    document.documentElement.addEventListener('mousemove', doResize, false);
+                    document.documentElement.addEventListener('mouseup', stopResize, false);
+                }
+
+                function doResize(e) {
+                    field.style.width = (startWidth + e.clientX - startX) + 'px';
+                    field.style.height = (startHeight + e.clientY - startY) + 'px';
+                }
+
+                function stopResize() {
+                    document.documentElement.removeEventListener('mousemove', doResize, false);
+                    document.documentElement.removeEventListener('mouseup', stopResize, false);
+                    knowledgeSystem.saveTopicContent(false);
+                }
+            }
+
+            saveTopicContent(showNotification = false) {
+                if (!this.currentTopic) return;
+                
+                const editor = document.getElementById('editorContent');
+                let content = editor.innerHTML;
+                
+                // Сохраняем позиции блоков в data-атрибуты
+                const blocksFields = editor.querySelectorAll('.blocks-field');
+                blocksFields.forEach(field => {
+                    const blocks = Array.from(field.querySelectorAll('.draggable-block'));
+                    const blocksData = blocks.map(block => ({
+                        x: parseInt(block.style.left) || 0,
+                        y: parseInt(block.style.top) || 0,
+                        width: parseInt(block.style.width) || 150,
+                        height: parseInt(block.style.height) || 80,
+                        color: block.style.backgroundColor,
+                        content: block.querySelector('.draggable-block-content').innerHTML
+                    }));
+                    field.setAttribute('data-blocks', JSON.stringify(blocksData));
+                });
+                
+                this.notes[this.currentTopic.id] = content;
+                this.saveData('notes', this.notes);
+                
+                if (showNotification) {
+                    this.showSaveNotification();
+                }
+                console.log('Сохранено содержимое для темы:', this.currentTopic.name);
+            }
+
+            showSaveNotification() {
+                const notification = document.createElement('div');
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: var(--success);
+                    color: white;
+                    padding: 10px 20px;
+                    border-radius: 5px;
+                    z-index: 10000;
+                    font-size: 14px;
+                    box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+                `;
+                notification.textContent = 'Сохранено ✓';
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.remove();
+                }, 2000);
+            }
+
+            setupAutoSave() {
+                const editor = document.getElementById('editorContent');
+                
+                editor.addEventListener('input', () => {
+                    this.debouncedSave();
+                });
+                
+                editor.addEventListener('blur', () => {
+                    if (this.currentTopic) {
+                        this.saveTopicContent(false);
+                    }
+                });
+            }
+
+            debouncedSave() {
+                if (this.saveTimeout) {
+                    clearTimeout(this.saveTimeout);
+                }
+                this.saveTimeout = setTimeout(() => {
+                    if (this.currentTopic) {
+                        this.saveTopicContent(false);
+                    }
+                }, 1000);
+            }
+
+            addSubject(name, description) {
+                const newSubject = {
+                    id: Date.now().toString(),
+                    name: name,
+                    description: description,
+                    createdAt: new Date().toISOString()
+                };
+                
+                this.subjects.push(newSubject);
+                this.saveData('subjects', this.subjects);
+                this.renderSubjects();
+                console.log('Добавлен предмет:', newSubject);
+            }
+
+            addTopic(name) {
+                if (!this.currentSubject) {
+                    alert('Сначала выберите предмет');
+                    return;
+                }
+
+                const newTopic = {
+                    id: Date.now().toString(),
+                    name: name,
+                    subjectId: this.currentSubject.id,
+                    createdAt: new Date().toISOString()
+                };
+                
+                this.topics.push(newTopic);
+                this.saveData('topics', this.topics);
+                this.renderTopics();
+                this.renderSubjects();
+                console.log('Добавлена тема:', newTopic);
+            }
+
+            bindEvents() {
+                document.getElementById('subjectForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const name = document.getElementById('subjectName').value.trim();
+                    const description = document.getElementById('subjectDescription').value.trim();
+                    
+                    if (name) {
+                        this.addSubject(name, description);
+                        closeSubjectModal();
+                        document.getElementById('subjectForm').reset();
+                    }
+                });
+
+                document.getElementById('topicForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const name = document.getElementById('topicName').value.trim();
+                    
+                    if (name) {
+                        this.addTopic(name);
+                        closeTopicModal();
+                        document.getElementById('topicForm').reset();
+                    }
+                });
+            }
+        }
+
+        // Функции для управления таблицами
+        function addTableRow(button) {
+            const table = button.closest('.custom-table');
+            const tbody = table.querySelector('tbody') || table;
+            const rows = table.querySelectorAll('tr');
+            const cols = rows[0].querySelectorAll('th, td').length;
+            
+            const newRow = document.createElement('tr');
+            
+            for (let i = 0; i < cols; i++) {
+                const cell = document.createElement(rows[0].querySelector('th') ? 'th' : 'td');
+                cell.contentEditable = true;
+                cell.innerHTML = 'Новая ячейка';
+                
+                knowledgeSystem.addColumnControls(cell, i);
+                newRow.appendChild(cell);
+            }
+            
+            knowledgeSystem.addRowControls(newRow, rows.length);
+            tbody.appendChild(newRow);
+            
+            knowledgeSystem.saveTopicContent(false);
+        }
+
+        function addTableRowAtIndex(button, rowIndex) {
+            const table = button.closest('.custom-table');
+            const tbody = table.querySelector('tbody') || table;
+            const rows = table.querySelectorAll('tr');
+            const cols = rows[0].querySelectorAll('th, td').length;
+            
+            const newRow = document.createElement('tr');
+            
+            for (let i = 0; i < cols; i++) {
+                const cell = document.createElement(rows[0].querySelector('th') ? 'th' : 'td');
+                cell.contentEditable = true;
+                cell.innerHTML = 'Новая ячейка';
+                
+                knowledgeSystem.addColumnControls(cell, i);
+                newRow.appendChild(cell);
+            }
+            
+            knowledgeSystem.addRowControls(newRow, rowIndex + 1);
+            
+            if (rowIndex + 1 >= rows.length) {
+                tbody.appendChild(newRow);
+            } else {
+                tbody.insertBefore(newRow, rows[rowIndex + 1]);
+            }
+            
+            knowledgeSystem.saveTopicContent(false);
+        }
+
+        function deleteTableRow(button, rowIndex) {
+            const table = button.closest('.custom-table');
+            const rows = table.querySelectorAll('tr');
+            
+            if (rows.length <= 1) {
+                alert('Нельзя удалить все строки таблицы');
+                return;
+            }
+            
+            if (confirm('Удалить эту строку?')) {
+                rows[rowIndex].remove();
+                knowledgeSystem.saveTopicContent(false);
+            }
+        }
+
+        function addTableColumn(button) {
+            const table = button.closest('.custom-table');
+            const rows = table.querySelectorAll('tr');
+            const colIndex = rows[0].querySelectorAll('th, td').length;
+            
+            rows.forEach((row, rowIndex) => {
+                const cell = document.createElement(rowIndex === 0 ? 'th' : 'td');
+                cell.contentEditable = true;
+                cell.innerHTML = 'Новая ячейка';
+                
+                knowledgeSystem.addColumnControls(cell, colIndex);
+                row.appendChild(cell);
+            });
+            
+            knowledgeSystem.saveTopicContent(false);
+        }
+
+        function addTableColumnAtIndex(button, colIndex) {
+            const table = button.closest('.custom-table');
+            const rows = table.querySelectorAll('tr');
+            
+            rows.forEach((row, rowIndex) => {
+                const cell = document.createElement(rowIndex === 0 ? 'th' : 'td');
+                cell.contentEditable = true;
+                cell.innerHTML = 'Новая ячейка';
+                
+                knowledgeSystem.addColumnControls(cell, colIndex + 1);
+                
+                if (colIndex + 1 >= row.children.length) {
+                    row.appendChild(cell);
+                } else {
+                    row.insertBefore(cell, row.children[colIndex + 1]);
+                }
+            });
+            
+            knowledgeSystem.saveTopicContent(false);
+        }
+
+        function deleteTableColumn(button, colIndex) {
+            const table = button.closest('.custom-table');
+            const rows = table.querySelectorAll('tr');
+            const cols = rows[0].querySelectorAll('th, td').length;
+            
+            if (cols <= 1) {
+                alert('Нельзя удалить все столбцы таблицы');
+                return;
+            }
+            
+            if (confirm('Удалить этот столбец?')) {
+                rows.forEach(row => {
+                    row.removeChild(row.children[colIndex]);
+                });
+                knowledgeSystem.saveTopicContent(false);
+            }
+        }
+
+        // Функции для форматирования текста
+        function formatText(command, value = null) {
+            const editor = document.getElementById('editorContent');
+            editor.focus();
+            
+            if (command === 'formatBlock' && (value === '<h1>' || value === '<h2>' || value === '<h3>')) {
+                document.execCommand('formatBlock', false, '<p>');
+                document.execCommand('formatBlock', false, value);
+            } else if (command === 'bold' || command === 'italic' || command === 'underline' || 
+                      command === 'insertUnorderedList' || command === 'insertOrderedList') {
+                document.execCommand(command, false, null);
+            } else if (value) {
+                document.execCommand(command, false, value);
+            } else {
+                document.execCommand(command, false, null);
+            }
+            
+            if (knowledgeSystem.currentTopic) {
+                knowledgeSystem.debouncedSave();
+            }
+        }
+
+        // Функция для вставки кода
+        function insertCode() {
+            const editor = document.getElementById('editorContent');
+            const selection = window.getSelection();
+            
+            if (selection.rangeCount > 0) {
+                const range = selection.getRangeAt(0);
+                
+                // Создаем блок кода
+                const codeElement = document.createElement('pre');
+                codeElement.className = 'code-block';
+                codeElement.innerHTML = '<button class="code-delete-btn" onclick="deleteCodeBlock(this.parentElement)">×</button>' + 
+                    (selection.toString().trim() || '// Введите ваш код здесь');
+                
+                // Вставляем блок кода
+                range.deleteContents();
+                range.insertNode(codeElement);
+                
+                // Добавляем пробел для продолжения текста
+                const space = document.createTextNode('\u00A0');
+                range.insertNode(space);
+                
+                // Устанавливаем курсор после блока кода
+                const newRange = document.createRange();
+                newRange.setStartAfter(space);
+                newRange.collapse(true);
+                selection.removeAllRanges();
+                selection.addRange(newRange);
+                
+            } else {
+                // Если нет выделения, вставляем блок кода в конец
+                const codeElement = document.createElement('pre');
+                codeElement.className = 'code-block';
+                codeElement.innerHTML = '<button class="code-delete-btn" onclick="deleteCodeBlock(this.parentElement)">×</button>' + 
+                    '// Введите ваш код здесь';
+                
+                editor.appendChild(codeElement);
+                
+                // Добавляем пробел для продолжения текста
+                const space = document.createTextNode('\u00A0');
+                editor.appendChild(space);
+                
+                // Устанавливаем курсор после блока кода
+                const newRange = document.createRange();
+                const selection = window.getSelection();
+                newRange.setStartAfter(space);
+                newRange.collapse(true);
+                selection.removeAllRanges();
+                selection.addRange(newRange);
+            }
+            
+            // Сохраняем
+            if (knowledgeSystem.currentTopic) {
+                knowledgeSystem.saveTopicContent(false);
+            }
+        }
+
+        // Функция для вставки таблицы
+        function insertTable() {
+            const editor = document.getElementById('editorContent');
+            const selection = window.getSelection();
+            
+            if (selection.rangeCount > 0) {
+                const range = selection.getRangeAt(0);
+                
+                const table = document.createElement('table');
+                table.className = 'custom-table';
+                table.innerHTML = `
+                    <thead>
+                        <tr>
+                            <th contenteditable="true">Заголовок 1</th>
+                            <th contenteditable="true">Заголовок 2</th>
+                            <th contenteditable="true">Заголовок 3</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td contenteditable="true">Ячейка 1</td>
+                            <td contenteditable="true">Ячейка 2</td>
+                            <td contenteditable="true">Ячейка 3</td>
+                        </tr>
+                        <tr>
+                            <td contenteditable="true">Ячейка 4</td>
+                            <td contenteditable="true">Ячейка 5</td>
+                            <td contenteditable="true">Ячейка 6</td>
+                        </tr>
+                    </tbody>
+                `;
+                
+                range.deleteContents();
+                range.insertNode(table);
+                
+                // Добавляем пробел для продолжения текста
+                const space = document.createTextNode('\u00A0');
+                range.insertNode(space);
+                
+                // Устанавливаем курсор после таблицы
+                const newRange = document.createRange();
+                newRange.setStartAfter(space);
+                newRange.collapse(true);
+                selection.removeAllRanges();
+                selection.addRange(newRange);
+                
+            }
+            
+            // Инициализируем управление таблицей
+            knowledgeSystem.initializeTableControls();
+            
+            if (knowledgeSystem.currentTopic) {
+                knowledgeSystem.saveTopicContent(false);
+            }
+        }
+
+        // Функция для вставки поля блоков
+        function insertBlocksField() {
+            const editor = document.getElementById('editorContent');
+            const selection = window.getSelection();
+            
+            if (selection.rangeCount > 0) {
+                const range = selection.getRangeAt(0);
+                
+                // Создаем поле для блоков
+                const blocksField = document.createElement('div');
+                blocksField.className = 'blocks-field';
+                blocksField.innerHTML = `
+                    <div class="field-header">
+                        <button class="field-delete-btn" onclick="deleteBlocksField(this.parentElement.parentElement)">×</button>
+                    </div>
+                    <div class="field-controls">
+                        <div class="field-resize-handle"></div>
+                    </div>
+                    <div style="text-align: center; margin-bottom: 10px; margin-top: 20px;">
+                        <button class="toolbar-btn" onclick="addBlockToField(this.parentElement.parentElement)" style="margin: 5px;">+ Добавить блок</button>
+                    </div>
+                `;
+                
+                // Вставляем поле для блоков
+                range.deleteContents();
+                range.insertNode(blocksField);
+                
+                // Добавляем пробел для продолжения текста
+                const space = document.createTextNode('\u00A0');
+                range.insertNode(space);
+                
+                // Устанавливаем курсор после поля
+                const newRange = document.createRange();
+                newRange.setStartAfter(space);
+                newRange.collapse(true);
+                selection.removeAllRanges();
+                selection.addRange(newRange);
+                
+            } else {
+                // Если нет выделения, вставляем поле в конец
+                const blocksField = document.createElement('div');
+                blocksField.className = 'blocks-field';
+                blocksField.innerHTML = `
+                    <div class="field-header">
+                        <button class="field-delete-btn" onclick="deleteBlocksField(this.parentElement.parentElement)">×</button>
+                    </div>
+                    <div class="field-controls">
+                        <div class="field-resize-handle"></div>
+                    </div>
+                    <div style="text-align: center; margin-bottom: 10px; margin-top: 20px;">
+                        <button class="toolbar-btn" onclick="addBlockToField(this.parentElement.parentElement)" style="margin: 5px;">+ Добавить блок</button>
+                    </div>
+                `;
+                
+                editor.appendChild(blocksField);
+                
+                // Добавляем пробел для продолжения текста
+                const space = document.createTextNode('\u00A0');
+                editor.appendChild(space);
+                
+                // Устанавливаем курсор после поля
+                const newRange = document.createRange();
+                const selection = window.getSelection();
+                newRange.setStartAfter(space);
+                newRange.collapse(true);
+                selection.removeAllRanges();
+                selection.addRange(newRange);
+            }
+            
+            // Инициализируем изменение размера
+            knowledgeSystem.initializeFieldResize(blocksField);
+            
+            // Сохраняем
+            if (knowledgeSystem.currentTopic) {
+                knowledgeSystem.saveTopicContent(false);
+            }
+        }
+
+        // Функция для добавления блока в поле
+        function addBlockToField(field) {
+            const blockData = {
+                x: 20,
+                y: 50,
+                width: 150,
+                height: 80,
+                color: '#ffffff',
+                content: 'Введите текст...'
+            };
+            
+            knowledgeSystem.createBlockInField(field, blockData);
+            knowledgeSystem.saveTopicContent(false);
+        }
+
+        // Функция для удаления поля блоков
+        function deleteBlocksField(field) {
+            if (field && confirm('Удалить поле блоков?')) {
+                field.remove();
+                if (knowledgeSystem.currentTopic) {
+                    knowledgeSystem.saveTopicContent(false);
+                }
+            }
+        }
+
+        // Функция для изменения цвета блока
+        function changeBlockColor(block) {
+            const colors = ['#ffffff', '#ffe6e6', '#e6f7ff', '#f0ffe6', '#fff0e6', '#f0e6ff'];
+            const currentColor = block.style.backgroundColor;
+            const currentIndex = colors.findIndex(color => color === currentColor || color === rgbToHex(currentColor));
+            const nextIndex = (currentIndex + 1) % colors.length;
+            
+            block.style.backgroundColor = colors[nextIndex];
+            if (knowledgeSystem.currentTopic) {
+                knowledgeSystem.saveTopicContent(false);
+            }
+        }
+
+        // Функция для удаления блока
+        function deleteBlock(block) {
+            if (block && confirm('Удалить блок?')) {
+                block.remove();
+                if (knowledgeSystem.currentTopic) {
+                    knowledgeSystem.saveTopicContent(false);
+                }
+            }
+        }
+
+        // Функция для удаления кода
+        function deleteCodeBlock(codeBlock) {
+            if (codeBlock && confirm('Удалить блок кода?')) {
+                codeBlock.remove();
+                if (knowledgeSystem.currentTopic) {
+                    knowledgeSystem.saveTopicContent(false);
+                }
+            }
+        }
+
+        // Вспомогательная функция для преобразования RGB в HEX
+        function rgbToHex(rgb) {
+            if (!rgb) return '#ffffff';
+            const result = rgb.match(/\d+/g);
+            if (!result) return '#ffffff';
+            return '#' + result.map(x => {
+                const hex = parseInt(x).toString(16);
+                return hex.length === 1 ? '0' + hex : hex;
+            }).join('');
+        }
+
+        // Глобальные функции для модальных окон
+        function openSubjectModal() {
+            document.getElementById('subjectModal').style.display = 'flex';
+        }
+
+        function closeSubjectModal() {
+            document.getElementById('subjectModal').style.display = 'none';
+        }
+
+        function openTopicModal() {
+            if (!knowledgeSystem.currentSubject) {
+                alert('Сначала выберите предмет');
+                return;
+            }
+            document.getElementById('topicModal').style.display = 'flex';
+        }
+
+        function closeTopicModal() {
+            document.getElementById('topicModal').style.display = 'none';
+        }
+
+        // Инициализация
+        let knowledgeSystem;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            knowledgeSystem = new KnowledgeSystem();
+            
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('modal')) {
+                    e.target.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

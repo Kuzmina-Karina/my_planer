@@ -1,0 +1,1778 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#667eea">
+    <meta name="msapplication-TileColor" content="#667eea">
+
+    <!-- Иконки для разных устройств -->
+    <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAHsSURBVHgB7ZaxTgJBFIZvYVmXhUIrO+0sbCgI8QGEhPhCJMY38AFsTKw0FvoEvoG9sTe0lpdABQNLuCTjLJdZ5n6z7C6y+D8yZHb+PXfP3HvP3Q0CgD+6LEIcqk5aXFpJ1jQZqV7Py8v1Zfbm4f7MshBFkcgqRUbN6PT09GSVUb3uk5f6+Pj7d//9rS3c9foNeUHDAJ1OZ6/p9XvSHpPPZNLFdF3X2jqdzpS5Tqa3cdwQ01iFec5SXf80s88p5iFZwYGF4eAwzIcj5N/fPzrRac4T5MpMZjLyWaVlzCz4BgHe6PWb3W73hdIZT3JhSLZ1TCs0ADt75PN50el07nBcVpnU4kD43x1Q5C+TMSkynpXX8hqjAXScPtGfcB8V/8CtkJ8b8fJ4gAh8Pb1avZ0q/mHxJ86vvAKiDA0KOSV5fO1o2R8j9znJ3m8Cx2RxnEFfqef4zJqvsGNTtcr3t2jS9FrMJ8qcyP6Y3i6cB5o3bO/tG0rpxNx2TvQ8Fcp0zX4nOBvqlTqdZQY2SgcyM6Ln2Z5zctfLZwesV2R3Zc5zbcj1aQO8gxYGYCcPDPBM6RTHpFKp5Bvx7Xard56rFe/ZV6Ye3JefQqj+6TLQAAAAAElFTkSuQmCC" sizes="192x192">
+    <link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAHsSURBVHgB7ZaxTgJBFIZvYVmXhUIrO+0sbCgI8QGEhPhCJMY38AFsTKw0FvoEvoG9sTe0lpdABQNLuCTjLJdZ5n6z7C6y+D8yZHb+PXfP3HvP3Q0CgD+6LEIcqk5aXFpJ1jQZqV7Py8v1Zfbm4f7MshBFkcgqRUbN6PT09GSVUb3uk5f6+Pj7d//9rS3c9foNeUHDAJ1OZ6/p9XvSHpPPZNLFdF3X2jqdzpS5Tqa3cdwQ01iFec5SXf80s88p5iFZwYGF4eAwzIcj5N/fPzrRac4T5MpMZjLyWaVlzCz4BgHe6PWb3W73hdIZT3JhSLZ1TCs0ADt75PN50el07nBcVpnU4kD43x1Q5C+TMSkynpXX8hqjAXScPtGfcB8V/8CtkJ8b8fJ4gAh8Pb1avZ0q/mHxJ86vvAKiDA0KOSV5fO1o2R8j9znJ3m8Cx2RxnEFfqef4zJqvsGNTtcr3t2jS9FrMJ8qcyP6Y3i6cB5o3bO/tG0rpxNx2TvQ8Fcp0zX4nOBvqlTqdZQY2SgcyM6Ln2Z5zctfLZwesV2R3Zc5zbcj1aQO8gxYGYCcPDPBM6RTHpFKp5Bvx7Xard56rFe/ZV6Ye3JefQqj+6TLQAAAAAElFTkSuQmCC">
+
+    <!-- Manifest файл -->
+    <link rel="manifest" href="manifest.json">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мой Планировщик</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --gray: #95a5a6;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: var(--dark);
+        }
+
+        .app {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .header h1 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .header .subtitle {
+            color: var(--gray);
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .nav-tab {
+            padding: 10px 25px;
+            border: 2px solid var(--secondary);
+            border-radius: 25px;
+            background: white;
+            color: var(--secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .nav-tab:hover {
+            background: var(--secondary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .nav-tab.active {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Стили для Трекера Недели */
+        .week-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .week-dates {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            flex: 1;
+            margin: 0 20px;
+        }
+
+        .day-card {
+            background: var(--light);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .day-card.active {
+            background: var(--secondary);
+            color: white;
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .day-card.today {
+            border-color: var(--accent);
+        }
+
+        .day-name {
+            font-weight: bold;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .day-date {
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+
+        .nav-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+
+        .tasks-section, .habits-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .add-btn {
+            background: var(--success);
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2em;
+        }
+
+        .task-item {
+            background: var(--light);
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .task-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .task-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--gray);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .task-checkbox.checked {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+
+        .task-content {
+            flex: 1;
+        }
+
+        .task-title {
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .task-meta {
+            font-size: 0.8em;
+            color: var(--gray);
+        }
+
+        .habit-tracker {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        .habit-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: var(--light);
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .habit-name {
+            font-weight: 500;
+            flex: 1;
+        }
+
+        .habit-days {
+            display: flex;
+            gap: 5px;
+        }
+
+        .habit-day {
+            width: 25px;
+            height: 25px;
+            border: 2px solid var(--gray);
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8em;
+            transition: all 0.3s ease;
+        }
+
+        .habit-day.checked {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .habit-day.today {
+            border-color: var(--accent);
+        }
+
+        .habit-actions {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+        }
+
+        .delete-habit {
+            background: none;
+            border: none;
+            color: var(--gray);
+            cursor: pointer;
+            font-size: 0.9em;
+            padding: 2px 5px;
+        }
+
+        .delete-habit:hover {
+            color: var(--accent);
+        }
+
+        .progress-section, .notes-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .progress-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .progress-day {
+            text-align: center;
+        }
+
+        .progress-bar {
+            height: 100px;
+            background: var(--light);
+            border-radius: 10px;
+            margin-bottom: 5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--success);
+            border-radius: 10px;
+            transition: height 0.3s ease;
+        }
+
+        .progress-label {
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .notes-textarea {
+            width: 100%;
+            height: 150px;
+            border: 2px solid var(--light);
+            border-radius: 10px;
+            padding: 15px;
+            font-family: inherit;
+            resize: vertical;
+            margin-bottom: 15px;
+        }
+
+        .notes-textarea:focus {
+            outline: none;
+            border-color: var(--secondary);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: var(--light);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: var(--secondary);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: var(--gray);
+            font-size: 0.9em;
+        }
+
+        .current-day-info {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .day-indicator {
+            background: var(--accent);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            margin-left: 10px;
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .task-action-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--gray);
+            font-size: 1.1em;
+            transition: color 0.3s ease;
+        }
+
+        .task-action-btn:hover {
+            color: var(--secondary);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: var(--gray);
+        }
+
+        /* Модальные окна */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--light);
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--secondary);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+
+        .btn-primary {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #219a52;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--gray);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #7f8c8d;
+            transform: translateY(-2px);
+        }
+
+        /* Стили для Системы Знаний */
+        .knowledge-content {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+            min-height: 70vh;
+        }
+
+        .sidebar {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .content {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .subject-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .subject-card {
+            background: var(--light);
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--secondary);
+        }
+
+        .subject-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .subject-card.active {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .subject-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .subject-meta {
+            font-size: 0.8em;
+            color: var(--gray);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .topic-list {
+            margin-top: 20px;
+        }
+
+        .topic-item {
+            padding: 10px 15px;
+            margin: 5px 0;
+            background: var(--light);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .topic-item:hover {
+            background: #d5dbdb;
+            transform: translateX(3px);
+        }
+
+        .topic-item.active {
+            background: var(--success);
+            color: white;
+        }
+
+        /* Редактор для Системы Знаний */
+        .editor-container {
+            min-height: 500px;
+            border: 2px solid var(--light);
+            border-radius: 10px;
+            padding: 20px;
+            background: white;
+            position: relative;
+        }
+
+        .editor-toolbar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--light);
+            flex-wrap: wrap;
+        }
+
+        .toolbar-btn {
+            padding: 8px 12px;
+            border: 1px solid var(--light);
+            background: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9em;
+        }
+
+        .toolbar-btn:hover {
+            background: var(--light);
+            border-color: var(--secondary);
+        }
+
+        .editor-content {
+            min-height: 400px;
+            padding: 15px;
+            line-height: 1.6;
+            outline: none;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            position: relative;
+        }
+
+        .editor-content:focus {
+            border-color: var(--secondary);
+        }
+
+        /* Форматирование текста */
+        .editor-content h1 {
+            font-size: 2em;
+            color: var(--primary);
+            margin: 20px 0 10px 0;
+            border-bottom: 2px solid var(--light);
+            padding-bottom: 5px;
+        }
+
+        .editor-content h2 {
+            font-size: 1.5em;
+            color: var(--primary);
+            margin: 15px 0 8px 0;
+        }
+
+        .editor-content h3 {
+            font-size: 1.25em;
+            color: var(--primary);
+            margin: 12px 0 6px 0;
+        }
+
+        .editor-content ul, .editor-content ol {
+            margin: 10px 0 10px 20px;
+        }
+
+        .editor-content li {
+            margin: 5px 0;
+        }
+
+        .editor-content blockquote {
+            border-left: 4px solid var(--secondary);
+            padding-left: 15px;
+            margin: 10px 0;
+            font-style: italic;
+            color: var(--gray);
+        }
+
+        .back-btn {
+            background: var(--gray);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+        }
+
+        .back-btn:hover {
+            background: #7f8c8d;
+        }
+
+        .save-btn {
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-top: 15px;
+        }
+
+        .save-btn:hover {
+            background: #219a52;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .week-dates {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 5px;
+            }
+            
+            .stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .progress-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            
+            .habit-item {
+                flex-direction: column;
+                gap: 10px;
+                align-items: stretch;
+            }
+            
+            .habit-days {
+                justify-content: center;
+            }
+            
+            .knowledge-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <div class="header">
+            <h1>Мой Планировщик</h1>
+            <div class="subtitle">Планируй. Действуй. Анализируй.</div>
+            <div class="nav-tabs">
+                <button class="nav-tab active" data-tab="tracker">Трекер Недели</button>
+                <button class="nav-tab" data-tab="knowledge">Система Знаний</button>
+            </div>
+        </div>
+
+        <!-- Вкладка Трекер Недели -->
+        <div id="tracker-tab" class="tab-content active">
+            <div class="week-nav">
+                <button class="nav-btn prev-week">← Предыдущая</button>
+                <div class="week-dates" id="weekDates">
+                    <!-- Дни будут заполнены JavaScript -->
+                </div>
+                <button class="nav-btn next-week">Следующая →</button>
+            </div>
+
+            <div class="current-day-info" id="currentDayInfo">
+                <!-- Информация о текущем дне -->
+            </div>
+
+            <div class="main-content">
+                <div class="tasks-section">
+                    <div class="section-title">
+                        Задачи на день
+                        <button class="add-btn" onclick="weeklyTracker.openTaskModal()">+</button>
+                    </div>
+                    
+                    <div id="dailyTasks">
+                        <!-- Задачи будут заполнены JavaScript -->
+                    </div>
+                </div>
+
+                <div class="habits-section">
+                    <div class="section-title">
+                        Привычки
+                        <button class="add-btn" onclick="weeklyTracker.openHabitModal()">+</button>
+                    </div>
+                    
+                    <div class="habit-tracker" id="habitTracker">
+                        <!-- Привычки будут заполнены JavaScript -->
+                    </div>
+
+                    <div class="stats">
+                        <div class="stat-card">
+                            <div class="stat-number" id="completedTasks">0</div>
+                            <div class="stat-label">Выполнено задач</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="habitCompletion">0%</div>
+                            <div class="stat-label">Привычек выполнено</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="weekProgress">0%</div>
+                            <div class="stat-label">Прогресс недели</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="progress-section">
+                <div class="section-title">Прогресс недели</div>
+                <div class="progress-grid" id="weekProgressGrid">
+                    <!-- Прогресс будет заполнен JavaScript -->
+                </div>
+            </div>
+
+            <div class="notes-section">
+                <div class="section-title">Заметки недели</div>
+                <textarea class="notes-textarea" id="weekNotes" placeholder="Записывайте здесь идеи, мысли и заметки..."></textarea>
+                <button class="nav-btn" onclick="weeklyTracker.saveNotes()">Сохранить заметки</button>
+            </div>
+
+            <!-- Модальные окна для Трекера -->
+            <div id="taskModal" class="modal">
+                <div class="modal-content">
+                    <h3>Новая задача</h3>
+                    <form id="taskForm">
+                        <div class="form-group">
+                            <label for="taskTitle">Название задачи:</label>
+                            <input type="text" id="taskTitle" class="form-control" placeholder="Введите название задачи" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="taskCategory">Категория:</label>
+                            <select id="taskCategory" class="form-control">
+                                <option value="main">🎯 Главные цели</option>
+                                <option value="work">💼 Работа</option>
+                                <option value="personal">🏠 Личное</option>
+                                <option value="development">📚 Развитие</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="taskDay">День выполнения:</label>
+                            <select id="taskDay" class="form-control">
+                                <!-- Опции будут заполнены JavaScript -->
+                            </select>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" onclick="weeklyTracker.closeTaskModal()">Отмена</button>
+                            <button type="submit" class="btn btn-primary">Сохранить</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div id="habitModal" class="modal">
+                <div class="modal-content">
+                    <h3>Новая привычка</h3>
+                    <form id="habitForm">
+                        <div class="form-group">
+                            <label for="habitName">Название привычки:</label>
+                            <input type="text" id="habitName" class="form-control" placeholder="Например: Утренняя зарядка" required>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" onclick="weeklyTracker.closeHabitModal()">Отмена</button>
+                            <button type="submit" class="btn btn-primary">Добавить привычку</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Вкладка Система Знаний -->
+        <div id="knowledge-tab" class="tab-content">
+            <div class="knowledge-content">
+                <div class="sidebar">
+                    <div class="section-title">
+                        Предметы
+                        <button class="add-btn" onclick="knowledgeSystem.openSubjectModal()">+</button>
+                    </div>
+
+                    <div class="subject-list" id="subjectList">
+                        <!-- Предметы будут заполнены JavaScript -->
+                    </div>
+                </div>
+
+                <div class="content">
+                    <div id="welcomeMessage" class="empty-state">
+                        <div>📚</div>
+                        <h3>Добро пожаловать в Систему Знаний!</h3>
+                        <p>Создайте свой первый предмет, чтобы начать организовывать знания.</p>
+                        <p style="margin-top: 15px; font-size: 0.9em; color: var(--gray);">
+                            Структура: Предмет → Тема → Материал
+                        </p>
+                    </div>
+
+                    <div id="subjectView" style="display: none;">
+                        <button class="back-btn" onclick="knowledgeSystem.backToSubjects()">← Назад к предметам</button>
+                        <div class="section-title">
+                            <span id="currentSubjectName">Предмет</span>
+                            <button class="add-btn" onclick="knowledgeSystem.openTopicModal()">+</button>
+                        </div>
+                        
+                        <div class="topic-list" id="topicList">
+                            <!-- Темы будут заполнены JavaScript -->
+                        </div>
+                    </div>
+
+                    <div id="topicView" style="display: none;">
+                        <button class="back-btn" onclick="knowledgeSystem.backToTopics()">← Назад к темам</button>
+                        <div class="section-title">
+                            <span id="currentTopicName">Тема</span>
+                        </div>
+                        
+                        <div class="editor-container">
+                            <div class="editor-toolbar">
+                                <button class="toolbar-btn" onclick="knowledgeSystem.formatText('bold')"><b>Ж</b></button>
+                                <button class="toolbar-btn" onclick="knowledgeSystem.formatText('italic')"><i>К</i></button>
+                                <button class="toolbar-btn" onclick="knowledgeSystem.formatText('underline')"><u>Ч</u></button>
+                                <button class="toolbar-btn" onclick="knowledgeSystem.formatText('insertUnorderedList')">• Список</button>
+                                <button class="toolbar-btn" onclick="knowledgeSystem.formatText('insertOrderedList')">1. Нумер. список</button>
+                                <button class="toolbar-btn" onclick="knowledgeSystem.formatText('formatBlock', '<h1>')">H1</button>
+                                <button class="toolbar-btn" onclick="knowledgeSystem.formatText('formatBlock', '<h2>')">H2</button>
+                                <button class="toolbar-btn" onclick="knowledgeSystem.formatText('formatBlock', '<h3>')">H3</button>
+                                <button class="toolbar-btn" onclick="knowledgeSystem.formatText('formatBlock', '<p>')">¶</button>
+                                <button class="toolbar-btn" onclick="knowledgeSystem.formatText('formatBlock', '<blockquote>')">❝</button>
+                            </div>
+                            
+                            <div class="editor-content" id="editorContent" contenteditable="true">
+                                Начните вводить текст...
+                            </div>
+                            
+                            <button class="save-btn" onclick="knowledgeSystem.saveTopicContent(true)">💾 Сохранить</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Модальные окна для Системы Знаний -->
+            <div id="subjectModal" class="modal">
+                <div class="modal-content">
+                    <h3>Новый предмет</h3>
+                    <form id="subjectForm">
+                        <div class="form-group">
+                            <label for="subjectName">Название предмета:</label>
+                            <input type="text" id="subjectName" class="form-control" placeholder="Например: Математика" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="subjectDescription">Описание (необязательно):</label>
+                            <textarea id="subjectDescription" class="form-control" placeholder="Краткое описание предмета" rows="3"></textarea>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" onclick="knowledgeSystem.closeSubjectModal()">Отмена</button>
+                            <button type="submit" class="btn btn-primary">Создать предмет</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div id="topicModal" class="modal">
+                <div class="modal-content">
+                    <h3>Новая тема</h3>
+                    <form id="topicForm">
+                        <div class="form-group">
+                            <label for="topicName">Название темы:</label>
+                            <input type="text" id="topicName" class="form-control" placeholder="Например: Производные" required>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" onclick="knowledgeSystem.closeTopicModal()">Отмена</button>
+                            <button type="submit" class="btn btn-primary">Создать тему</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Класс для Трекера Недели
+        class WeeklyTracker {
+            constructor() {
+                this.currentWeek = this.getCurrentWeek();
+                this.selectedDay = this.getTodayIndex();
+                this.tasks = this.loadData('weekly_tasks', []);
+                this.habits = this.loadData('weekly_habits', this.getDefaultHabits());
+                this.notes = this.loadData('weekly_notes', {});
+                this.habitHistory = this.loadData('weekly_habitHistory', {});
+                this.init();
+            }
+
+            init() {
+                this.renderWeekDates();
+                this.renderDayTasks();
+                this.renderHabits();
+                this.renderProgress();
+                this.renderStats();
+                this.bindEvents();
+                this.loadCurrentNotes();
+                this.updateDaySelect();
+                this.bindModalEvents();
+            }
+
+            getCurrentWeek() {
+                const now = new Date();
+                const startOfWeek = new Date(now);
+                startOfWeek.setDate(now.getDate() - now.getDay() + 1); // Monday
+                return startOfWeek;
+            }
+
+            getTodayIndex() {
+                const today = new Date().getDay();
+                return today === 0 ? 6 : today - 1; // Convert to 0-6 (Mon-Sun)
+            }
+
+            getWeekDates() {
+                const dates = [];
+                const startDate = new Date(this.currentWeek);
+                
+                for (let i = 0; i < 7; i++) {
+                    const date = new Date(startDate);
+                    date.setDate(startDate.getDate() + i);
+                    dates.push(date);
+                }
+                
+                return dates;
+            }
+
+            getWeekKey() {
+                return this.currentWeek.toISOString().split('T')[0];
+            }
+
+            renderWeekDates() {
+                const weekDates = document.getElementById('weekDates');
+                const dates = this.getWeekDates();
+                
+                weekDates.innerHTML = dates.map((date, index) => {
+                    const dayNames = ['ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ', 'СБ', 'ВС'];
+                    const isToday = this.isToday(date);
+                    const isActive = index === this.selectedDay;
+                    
+                    return `
+                        <div class="day-card ${isActive ? 'active' : ''} ${isToday ? 'today' : ''}" 
+                             data-day="${index}" onclick="weeklyTracker.selectDay(${index})">
+                            <div class="day-name">${dayNames[index]}</div>
+                            <div class="day-date">${date.getDate().toString().padStart(2, '0')}.${(date.getMonth() + 1).toString().padStart(2, '0')}</div>
+                        </div>
+                    `;
+                }).join('');
+
+                this.updateCurrentDayInfo();
+            }
+
+            selectDay(dayIndex) {
+                this.selectedDay = dayIndex;
+                this.renderWeekDates();
+                this.renderDayTasks();
+                this.renderHabits();
+            }
+
+            updateCurrentDayInfo() {
+                const dates = this.getWeekDates();
+                const selectedDate = dates[this.selectedDay];
+                const dayNames = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'];
+                
+                document.getElementById('currentDayInfo').innerHTML = `
+                    ${dayNames[this.selectedDay]}, ${selectedDate.getDate().toString().padStart(2, '0')}.${(selectedDate.getMonth() + 1).toString().padStart(2, '0')}.${selectedDate.getFullYear()}
+                    ${this.isToday(selectedDate) ? '<span class="day-indicator">Сегодня</span>' : ''}
+                `;
+            }
+
+            updateDaySelect() {
+                const daySelect = document.getElementById('taskDay');
+                const dates = this.getWeekDates();
+                const dayNames = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'];
+                
+                daySelect.innerHTML = `
+                    <option value="all">Вся неделя</option>
+                    ${dates.map((date, index) => `
+                        <option value="${index}" ${index === this.selectedDay ? 'selected' : ''}>
+                            ${dayNames[index]} (${date.getDate().toString().padStart(2, '0')}.${(date.getMonth() + 1).toString().padStart(2, '0')})
+                        </option>
+                    `).join('')}
+                `;
+            }
+
+            isToday(date) {
+                const today = new Date();
+                return date.toDateString() === today.toDateString();
+            }
+
+            renderDayTasks() {
+                const container = document.getElementById('dailyTasks');
+                const dayTasks = this.tasks.filter(task => 
+                    task.day === 'all' || parseInt(task.day) === this.selectedDay
+                );
+
+                if (dayTasks.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <div>📝</div>
+                            <div>Нет задач на этот день</div>
+                            <div style="margin-top: 10px; font-size: 0.9em;">Нажмите + чтобы добавить задачу</div>
+                        </div>
+                    `;
+                } else {
+                    container.innerHTML = dayTasks.map(task => `
+                        <div class="task-item">
+                            <div class="task-checkbox ${task.completed ? 'checked' : ''}" 
+                                 onclick="weeklyTracker.toggleTask('${task.id}')">
+                                ${task.completed ? '✓' : ''}
+                            </div>
+                            <div class="task-content">
+                                <div class="task-title">${task.title}</div>
+                                <div class="task-meta">${this.getCategoryName(task.category)}</div>
+                            </div>
+                            <div class="task-actions">
+                                <button class="task-action-btn" onclick="weeklyTracker.deleteTask('${task.id}')">🗑️</button>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            }
+
+            getCategoryName(category) {
+                const categories = {
+                    'main': '🎯 Главная цель',
+                    'work': '💼 Работа',
+                    'personal': '🏠 Личное',
+                    'development': '📚 Развитие'
+                };
+                return categories[category] || category;
+            }
+
+            getDefaultHabits() {
+                return [
+                    {
+                        id: '1',
+                        name: 'Подъем в 06:00',
+                        createdAt: new Date().toISOString()
+                    },
+                    {
+                        id: '2',
+                        name: 'Спорт',
+                        createdAt: new Date().toISOString()
+                    },
+                    {
+                        id: '3',
+                        name: 'Чтение',
+                        createdAt: new Date().toISOString()
+                    },
+                    {
+                        id: '4',
+                        name: 'Английский',
+                        createdAt: new Date().toISOString()
+                    }
+                ];
+            }
+
+            renderHabits() {
+                const container = document.getElementById('habitTracker');
+                const weekKey = this.getWeekKey();
+                
+                // Initialize habit history for this week if not exists
+                if (!this.habitHistory[weekKey]) {
+                    this.habitHistory[weekKey] = {};
+                    this.habits.forEach(habit => {
+                        this.habitHistory[weekKey][habit.id] = [false, false, false, false, false, false, false];
+                    });
+                    this.saveData('weekly_habitHistory', this.habitHistory);
+                }
+
+                container.innerHTML = this.habits.map(habit => {
+                    const habitDays = this.habitHistory[weekKey][habit.id] || [false, false, false, false, false, false, false];
+                    
+                    return `
+                        <div class="habit-item">
+                            <div class="habit-actions">
+                                <button class="delete-habit" onclick="weeklyTracker.deleteHabit('${habit.id}')">×</button>
+                            </div>
+                            <div class="habit-name">${habit.name}</div>
+                            <div class="habit-days">
+                                ${habitDays.map((checked, index) => `
+                                    <div class="habit-day ${checked ? 'checked' : ''} ${index === this.selectedDay ? 'today' : ''}" 
+                                         onclick="weeklyTracker.toggleHabitDay('${habit.id}', ${index})">
+                                        ${['П', 'В', 'С', 'Ч', 'П', 'С', 'В'][index]}
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            renderProgress() {
+                const container = document.getElementById('weekProgressGrid');
+                const dates = this.getWeekDates();
+                
+                container.innerHTML = dates.map((date, index) => {
+                    const dayTasks = this.tasks.filter(task => task.day === 'all' || parseInt(task.day) === index);
+                    const completedTasks = dayTasks.filter(task => task.completed).length;
+                    const totalTasks = dayTasks.length;
+                    const progress = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
+                    
+                    return `
+                        <div class="progress-day">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="height: ${progress}%"></div>
+                            </div>
+                            <div class="progress-label">${date.getDate().toString().padStart(2, '0')}.${(date.getMonth() + 1).toString().padStart(2, '0')}</div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            renderStats() {
+                const dayTasks = this.tasks.filter(task => 
+                    task.day === 'all' || parseInt(task.day) === this.selectedDay
+                );
+                const completedTasks = dayTasks.filter(task => task.completed).length;
+                
+                const weekKey = this.getWeekKey();
+                const totalHabits = this.habits.length * 7;
+                let completedHabits = 0;
+                
+                if (this.habitHistory[weekKey]) {
+                    Object.values(this.habitHistory[weekKey]).forEach(days => {
+                        completedHabits += days.filter(Boolean).length;
+                    });
+                }
+                
+                const habitCompletion = totalHabits > 0 ? Math.round((completedHabits / totalHabits) * 100) : 0;
+                const dayProgress = dayTasks.length > 0 ? Math.round((completedTasks / dayTasks.length) * 100) : 0;
+
+                document.getElementById('completedTasks').textContent = completedTasks;
+                document.getElementById('habitCompletion').textContent = `${habitCompletion}%`;
+                document.getElementById('weekProgress').textContent = `${dayProgress}%`;
+            }
+
+            toggleTask(taskId) {
+                const task = this.tasks.find(t => t.id === taskId);
+                if (task) {
+                    task.completed = !task.completed;
+                    this.saveData('weekly_tasks', this.tasks);
+                    this.renderDayTasks();
+                    this.renderProgress();
+                    this.renderStats();
+                }
+            }
+
+            toggleHabitDay(habitId, dayIndex) {
+                const weekKey = this.getWeekKey();
+                if (this.habitHistory[weekKey] && this.habitHistory[weekKey][habitId]) {
+                    this.habitHistory[weekKey][habitId][dayIndex] = !this.habitHistory[weekKey][habitId][dayIndex];
+                    this.saveData('weekly_habitHistory', this.habitHistory);
+                    this.renderHabits();
+                    this.renderStats();
+                }
+            }
+
+            addTask(taskData) {
+                const newTask = {
+                    id: Date.now().toString(),
+                    title: taskData.title,
+                    category: taskData.category,
+                    day: taskData.day,
+                    completed: false,
+                    createdAt: new Date().toISOString()
+                };
+                
+                this.tasks.push(newTask);
+                this.saveData('weekly_tasks', this.tasks);
+                this.renderDayTasks();
+                this.renderProgress();
+                this.renderStats();
+            }
+
+            addHabit(habitData) {
+                const newHabit = {
+                    id: Date.now().toString(),
+                    name: habitData.name,
+                    createdAt: new Date().toISOString()
+                };
+                
+                this.habits.push(newHabit);
+                
+                // Initialize habit for all weeks in history
+                const weekKey = this.getWeekKey();
+                if (!this.habitHistory[weekKey]) {
+                    this.habitHistory[weekKey] = {};
+                }
+                this.habitHistory[weekKey][newHabit.id] = [false, false, false, false, false, false, false];
+                
+                this.saveData('weekly_habits', this.habits);
+                this.saveData('weekly_habitHistory', this.habitHistory);
+                this.renderHabits();
+                this.renderStats();
+            }
+
+            deleteTask(taskId) {
+                if (confirm('Удалить задачу?')) {
+                    this.tasks = this.tasks.filter(t => t.id !== taskId);
+                    this.saveData('weekly_tasks', this.tasks);
+                    this.renderDayTasks();
+                    this.renderProgress();
+                    this.renderStats();
+                }
+            }
+
+            deleteHabit(habitId) {
+                if (confirm('Удалить привычку?')) {
+                    this.habits = this.habits.filter(h => h.id !== habitId);
+                    
+                    // Remove habit from all weeks in history
+                    Object.keys(this.habitHistory).forEach(weekKey => {
+                        delete this.habitHistory[weekKey][habitId];
+                    });
+                    
+                    this.saveData('weekly_habits', this.habits);
+                    this.saveData('weekly_habitHistory', this.habitHistory);
+                    this.renderHabits();
+                    this.renderStats();
+                }
+            }
+
+            saveNotes() {
+                const notesText = document.getElementById('weekNotes').value;
+                const weekKey = this.getWeekKey();
+                this.notes[weekKey] = notesText;
+                this.saveData('weekly_notes', this.notes);
+                alert('Заметки сохранены!');
+            }
+
+            loadCurrentNotes() {
+                const weekKey = this.getWeekKey();
+                document.getElementById('weekNotes').value = this.notes[weekKey] || '';
+            }
+
+            bindEvents() {
+                document.querySelector('.prev-week').addEventListener('click', () => {
+                    this.currentWeek.setDate(this.currentWeek.getDate() - 7);
+                    this.selectedDay = 0; // Reset to Monday when changing week
+                    this.renderWeekDates();
+                    this.renderDayTasks();
+                    this.renderHabits();
+                    this.renderProgress();
+                    this.renderStats();
+                    this.loadCurrentNotes();
+                    this.updateDaySelect();
+                });
+
+                document.querySelector('.next-week').addEventListener('click', () => {
+                    this.currentWeek.setDate(this.currentWeek.getDate() + 7);
+                    this.selectedDay = 0; // Reset to Monday when changing week
+                    this.renderWeekDates();
+                    this.renderDayTasks();
+                    this.renderHabits();
+                    this.renderProgress();
+                    this.renderStats();
+                    this.loadCurrentNotes();
+                    this.updateDaySelect();
+                });
+            }
+
+            bindModalEvents() {
+                document.getElementById('taskForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.addTask({
+                        title: document.getElementById('taskTitle').value,
+                        category: document.getElementById('taskCategory').value,
+                        day: document.getElementById('taskDay').value
+                    });
+                    this.closeTaskModal();
+                    e.target.reset();
+                });
+
+                document.getElementById('habitForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.addHabit({
+                        name: document.getElementById('habitName').value
+                    });
+                    this.closeHabitModal();
+                    e.target.reset();
+                });
+            }
+
+            openTaskModal() {
+                document.getElementById('taskModal').style.display = 'flex';
+            }
+
+            closeTaskModal() {
+                document.getElementById('taskModal').style.display = 'none';
+            }
+
+            openHabitModal() {
+                document.getElementById('habitModal').style.display = 'flex';
+            }
+
+            closeHabitModal() {
+                document.getElementById('habitModal').style.display = 'none';
+            }
+
+            loadData(key, defaultValue) {
+                const saved = localStorage.getItem(key);
+                return saved ? JSON.parse(saved) : defaultValue;
+            }
+
+            saveData(key, data) {
+                localStorage.setItem(key, JSON.stringify(data));
+            }
+        }
+
+        // Класс для Системы Знаний
+        class KnowledgeSystem {
+            constructor() {
+                this.subjects = this.loadData('knowledge_subjects', []);
+                this.topics = this.loadData('knowledge_topics', []);
+                this.notes = this.loadData('knowledge_notes', {});
+                this.currentSubject = null;
+                this.currentTopic = null;
+                this.saveTimeout = null;
+                this.init();
+            }
+
+            init() {
+                this.renderSubjects();
+                this.bindEvents();
+                this.bindModalEvents();
+                this.setupAutoSave();
+                console.log('Система Знаний инициализирована. Предметов:', this.subjects.length);
+            }
+
+            loadData(key, defaultValue) {
+                const saved = localStorage.getItem(key);
+                if (saved) {
+                    try {
+                        return JSON.parse(saved);
+                    } catch (e) {
+                        console.error('Ошибка загрузки данных:', e);
+                    }
+                }
+                return defaultValue;
+            }
+
+            saveData(key, data) {
+                try {
+                    localStorage.setItem(key, JSON.stringify(data));
+                    console.log('Сохранено:', key, data);
+                } catch (e) {
+                    console.error('Ошибка сохранения:', e);
+                }
+            }
+
+            renderSubjects() {
+                const container = document.getElementById('subjectList');
+                
+                if (this.subjects.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <div>📚</div>
+                            <div>Пока нет предметов</div>
+                            <div style="margin-top: 10px; font-size: 0.9em;">Нажмите + чтобы добавить первый предмет</div>
+                        </div>
+                    `;
+                } else {
+                    container.innerHTML = this.subjects.map(subject => {
+                        const topicCount = this.topics.filter(t => t.subjectId === subject.id).length;
+                        return `
+                            <div class="subject-card" onclick="knowledgeSystem.selectSubject('${subject.id}')">
+                                <div class="subject-name">${subject.name}</div>
+                                <div class="subject-meta">
+                                    <span>${topicCount} тем</span>
+                                    <span>${new Date(subject.createdAt).toLocaleDateString()}</span>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+            }
+
+            renderTopics() {
+                const container = document.getElementById('topicList');
+                if (!this.currentSubject) return;
+
+                const subjectTopics = this.topics.filter(t => t.subjectId === this.currentSubject.id);
+                
+                if (subjectTopics.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <div>📂</div>
+                            <div>Пока нет тем</div>
+                            <div style="margin-top: 10px; font-size: 0.9em;">Нажмите + чтобы добавить первую тему</div>
+                        </div>
+                    `;
+                } else {
+                    container.innerHTML = subjectTopics.map(topic => `
+                        <div class="topic-item" onclick="knowledgeSystem.selectTopic('${topic.id}')">
+                            ${topic.name}
+                        </div>
+                    `).join('');
+                }
+            }
+
+            selectSubject(subjectId) {
+                this.currentSubject = this.subjects.find(s => s.id === subjectId);
+                if (this.currentSubject) {
+                    document.getElementById('welcomeMessage').style.display = 'none';
+                    document.getElementById('topicView').style.display = 'none';
+                    document.getElementById('subjectView').style.display = 'block';
+                    document.getElementById('currentSubjectName').textContent = this.currentSubject.name;
+                    this.renderTopics();
+                }
+            }
+
+            selectTopic(topicId) {
+                this.currentTopic = this.topics.find(t => t.id === topicId);
+                if (this.currentTopic) {
+                    document.getElementById('subjectView').style.display = 'none';
+                    document.getElementById('topicView').style.display = 'block';
+                    document.getElementById('currentTopicName').textContent = this.currentTopic.name;
+                    
+                    // Загружаем содержимое темы
+                    this.loadTopicContent();
+                }
+            }
+
+            backToSubjects() {
+                document.getElementById('subjectView').style.display = 'none';
+                document.getElementById('topicView').style.display = 'none';
+                document.getElementById('welcomeMessage').style.display = 'block';
+                this.currentSubject = null;
+                this.currentTopic = null;
+            }
+
+            backToTopics() {
+                document.getElementById('topicView').style.display = 'none';
+                document.getElementById('subjectView').style.display = 'block';
+                this.currentTopic = null;
+            }
+
+            loadTopicContent() {
+                const editor = document.getElementById('editorContent');
+                let content = this.notes[this.currentTopic.id] || '<p>Начните вводить текст...</p>';
+                editor.innerHTML = content;
+            }
+
+            saveTopicContent(showNotification = false) {
+                if (!this.currentTopic) return;
+                
+                const editor = document.getElementById('editorContent');
+                this.notes[this.currentTopic.id] = editor.innerHTML;
+                this.saveData('knowledge_notes', this.notes);
+                
+                if (showNotification) {
+                    this.showSaveNotification();
+                }
+                console.log('Сохранено содержимое для темы:', this.currentTopic.name);
+            }
+
+            showSaveNotification() {
+                const notification = document.createElement('div');
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: var(--success);
+                    color: white;
+                    padding: 10px 20px;
+                    border-radius: 5px;
+                    z-index: 10000;
+                    font-size: 14px;
+                    box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+                `;
+                notification.textContent = 'Сохранено ✓';
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.remove();
+                }, 2000);
+            }
+
+            setupAutoSave() {
+                const editor = document.getElementById('editorContent');
+                
+                editor.addEventListener('input', () => {
+                    this.debouncedSave();
+                });
+                
+                editor.addEventListener('blur', () => {
+                    if (this.currentTopic) {
+                        this.saveTopicContent(false);
+                    }
+                });
+            }
+
+            debouncedSave() {
+                if (this.saveTimeout) {
+                    clearTimeout(this.saveTimeout);
+                }
+                this.saveTimeout = setTimeout(() => {
+                    if (this.currentTopic) {
+                        this.saveTopicContent(false);
+                    }
+                }, 1000);
+            }
+
+            addSubject(name, description) {
+                const newSubject = {
+                    id: Date.now().toString(),
+                    name: name,
+                    description: description,
+                    createdAt: new Date().toISOString()
+                };
+                
+                this.subjects.push(newSubject);
+                this.saveData('knowledge_subjects', this.subjects);
+                this.renderSubjects();
+                console.log('Добавлен предмет:', newSubject);
+            }
+
+            addTopic(name) {
+                if (!this.currentSubject) {
+                    alert('Сначала выберите предмет');
+                    return;
+                }
+
+                const newTopic = {
+                    id: Date.now().toString(),
+                    name: name,
+                    subjectId: this.currentSubject.id,
+                    createdAt: new Date().toISOString()
+                };
+                
+                this.topics.push(newTopic);
+                this.saveData('knowledge_topics', this.topics);
+                this.renderTopics();
+                this.renderSubjects();
+                console.log('Добавлена тема:', newTopic);
+            }
+
+            formatText(command, value = null) {
+                const editor = document.getElementById('editorContent');
+                editor.focus();
+                
+                if (command === 'formatBlock' && (value === '<h1>' || value === '<h2>' || value === '<h3>')) {
+                    document.execCommand('formatBlock', false, '<p>');
+                    document.execCommand('formatBlock', false, value);
+                } else if (command === 'bold' || command === 'italic' || command === 'underline' || 
+                          command === 'insertUnorderedList' || command === 'insertOrderedList') {
+                    document.execCommand(command, false, null);
+                } else if (value) {
+                    document.execCommand(command, false, value);
+                } else {
+                    document.execCommand(command, false, null);
+                }
+                
+                if (this.currentTopic) {
+                    this.debouncedSave();
+                }
+            }
+
+            bindEvents() {
+                // Навигация между вкладками
+                document.querySelectorAll('.nav-tab').forEach(tab => {
+                    tab.addEventListener('click', () => {
+                        const tabId = tab.getAttribute('data-tab');
+                        
+                        // Убираем активный класс у всех вкладок
+                        document.querySelectorAll('.nav-tab').forEach(t => {
+                            t.classList.remove('active');
+                        });
+                        
+                        // Добавляем активный класс текущей вкладке
+                        tab.classList.add('active');
+                        
+                        // Скрываем все содержимое вкладок
+                        document.querySelectorAll('.tab-content').forEach(content => {
+                            content.classList.remove('active');
+                        });
+                        
+                        // Показываем содержимое текущей вкладки
+                        document.getElementById(`${tabId}-tab`).classList.add('active');
+                    });
+                });
+            }
+
+            bindModalEvents() {
+                document.getElementById('subjectForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const name = document.getElementById('subjectName').value.trim();
+                    const description = document.getElementById('subjectDescription').value.trim();
+                    
+                    if (name) {
+                        this.addSubject(name, description);
+                        this.closeSubjectModal();
+                        document.getElementById('subjectForm').reset();
+                    }
+                });
+
+                document.getElementById('topicForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const name = document.getElementById('topicName').value.trim();
+                    
+                    if (name) {
+                        this.addTopic(name);
+                        this.closeTopicModal();
+                        document.getElementById('topicForm').reset();
+                    }
+                });
+            }
+
+            openSubjectModal() {
+                document.getElementById('subjectModal').style.display = 'flex';
+            }
+
+            closeSubjectModal() {
+                document.getElementById('subjectModal').style.display = 'none';
+            }
+
+            openTopicModal() {
+                if (!this.currentSubject) {
+                    alert('Сначала выберите предмет');
+                    return;
+                }
+                document.getElementById('topicModal').style.display = 'flex';
+            }
+
+            closeTopicModal() {
+                document.getElementById('topicModal').style.display = 'none';
+            }
+        }
+
+        // Глобальные функции для закрытия модальных окон при клике вне их
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                e.target.style.display = 'none';
+            }
+        });
+
+        // Инициализация при загрузке страницы
+        let weeklyTracker, knowledgeSystem;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            weeklyTracker = new WeeklyTracker();
+            knowledgeSystem = new KnowledgeSystem();
+        });
+    </script>
+</body>
+</html>
